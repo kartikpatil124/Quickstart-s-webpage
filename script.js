@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
         } else {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Back to top button
     const backToTopButton = document.querySelector('.back-to-top');
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (window.scrollY > 300) {
             backToTopButton.classList.add('active');
         } else {
@@ -19,32 +19,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Smooth scrolling for navigation links
+    // Smooth scrolling (fixed — no error for "#")
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+
+            // Skip if href is "#" or empty — prevents the JS error
+            if (!href || href === "#") return;
+
+            const target = document.querySelector(href);
+            if (!target) return;
+
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            }
+            window.scrollTo({
+                top: target.offsetTop - 70,
+                behavior: 'smooth'
+            });
         });
     });
 
     // Feature tabs functionality
     const featureTabs = document.querySelectorAll('.feature-tab');
     const featureImages = document.querySelectorAll('.feature-image');
-    
     if (featureTabs.length && featureImages.length) {
         featureTabs.forEach((tab, index) => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs and images
+            tab.addEventListener('click', function () {
                 featureTabs.forEach(t => t.classList.remove('active'));
                 featureImages.forEach(img => img.classList.remove('active'));
-                
-                // Add active class to clicked tab and corresponding image
+
                 this.classList.add('active');
                 featureImages[index].classList.add('active');
             });
@@ -53,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Scroll animation trigger
     const animateElements = document.querySelectorAll('.animate-on-scroll');
-    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -63,11 +64,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, delay * 1000);
             }
         });
-    }, { 
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    });
-    
+    },
+        {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        }
+    );
     animateElements.forEach(el => observer.observe(el));
 
     // Floating animation for hero image
